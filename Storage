@@ -1,0 +1,124 @@
+see = pd.read_csv(r"C:\Users\qtaillefer\Desktop\Storagerf1.csv")
+print(see)
+
+df = pd.DataFrame(see, columns=['Electric_Demand', 'Res_Comm', 'NET_LNG ', 'Industrial', 'Canadian_Imports', 'Mexican_Exports', 'Production','DD', 'Storage'])
+
+#print(df)
+
+X = df[['Electric_Demand', 'Res_Comm', 'NET_LNG ', 'Industrial', 'Canadian_Imports', 'Production','Mexican_Exports', 'DD']]
+y = df['Storage']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+clf = RandomForestRegressor(n_estimators=150)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+
+# Evaluating the Algorithm
+from sklearn import metrics
+import numpy as np
+
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+
+#featureImportances = pd.Series(clf.feature_importances_).sort_values(ascending=False)
+#print(featureImportances)
+
+#sn.barplot(x=round(featureImportances,4), y=featureImportances)
+#plt.xlabel('Features Importance')
+#plt.show()
+
+
+
+# tkinter GUI
+root = tk.Tk()
+
+canvas1 = tk.Canvas(root, width=1000, height=550)
+canvas1.pack()
+
+
+label1 = tk.Label(root, text='            Electric_Demand:')
+canvas1.create_window(100, 100, window=label1)
+
+entry1 = tk.Entry(root)
+canvas1.create_window(270, 100, window=entry1)
+
+
+label2 = tk.Label(root, text='Res_Comm:     ')
+canvas1.create_window(100, 120, window=label2)
+
+entry2 = tk.Entry(root)
+canvas1.create_window(270, 120, window=entry2)
+
+
+label3 = tk.Label(root, text='     NET_LNG: ')
+canvas1.create_window(100, 140, window=label3)
+
+entry3 = tk.Entry(root)
+canvas1.create_window(270, 140, window=entry3)
+
+label4 = tk.Label(root, text='Canadian_Imports:')
+canvas1.create_window(100, 160, window=label4)
+
+entry4 = tk.Entry(root)
+canvas1.create_window(270, 160, window=entry4)
+
+label5 = tk.Label(root, text='Industrial:')
+canvas1.create_window(100, 180, window=label5)
+
+entry5 = tk.Entry(root)
+canvas1.create_window(270, 180, window=entry5)
+
+label6 = tk.Label(root, text='Mexican_Exports:')
+canvas1.create_window(100, 200, window=label6)
+
+entry6 = tk.Entry(root)
+canvas1.create_window(270, 200, window=entry6)
+
+label7 = tk.Label(root, text='DD:')
+canvas1.create_window(100, 220, window=label7)
+
+entry7 = tk.Entry(root)
+canvas1.create_window(270, 220, window=entry7)
+
+label8 = tk.Label(root, text='Production:')
+canvas1.create_window(100, 240, window=label8)
+
+entry8 = tk.Entry(root)
+canvas1.create_window(270, 240, window=entry8)
+
+def values():
+    global Electric_Demand
+    Electric_Demand = float(entry1.get())
+
+    global Res_Comm
+    Res_Comm = float(entry2.get())
+
+    global NET_LNG
+    NET_LNG= float(entry3.get())
+
+    global Canadian_Import
+    Canadian_Import = float(entry4.get())
+
+    global Industrial
+    Industrial = float(entry5.get())
+
+    global Mexican_Exports
+    Mexican_Exports = float(entry6.get())
+
+    global DD
+    DD = float(entry7.get())
+
+    global Production
+    Production = float(entry8.get())
+
+    Prediction_result = ('  Predicted Result: ', clf.predict([[Electric_Demand, Res_Comm, NET_LNG , Industrial, Canadian_Import,Production, Mexican_Exports, DD]]))
+    label_Prediction = tk.Label(root, text=Prediction_result, bg='sky blue')
+    canvas1.create_window(300, 300, window=label_Prediction)
+
+
+button1 = tk.Button(root, text='      Predict      ', command=values, bg='Blue', fg='Grey', font=11)
+canvas1.create_window(300, 320, window=button1)
+
+root.mainloop()

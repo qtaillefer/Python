@@ -1,0 +1,40 @@
+#https://www.statsmodels.org/dev/vector_ar.html?highlight=impulse
+import pandas as pd
+import seaborn as sn
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import metrics
+import tkinter as tk
+import matplotlib.pyplot as plt
+import numpy as np
+
+import statsmodels.api as sm
+from statsmodels.tsa.api import VAR
+
+
+see = pd.read_csv(r"C:\Users\qtaillefer\Desktop\Storagerf1.csv")
+print(see)
+
+df = pd.DataFrame(see, columns=['Electric_Demand', 'Production','DD', 'Storage'])
+
+dflog = np.log(df).diff().dropna()
+print(dflog)
+
+model = VAR(dflog)
+
+print(model)
+results = model.fit(2)
+print(results.summary())
+print(results.plot_acorr())
+
+print(results.acf())
+print(model.select_order(15))
+results = model.fit(maxlags=10, ic='aic')
+lag_order = results.k_ar
+print(lag_order)
+print(results.forecast(dflog.values[-lag_order:], 5))
+plt.plot=results.plot_forecast(5)
+
+irf = results.irf(5)
+irf.plot(impulse='DD')
+plt.show()
